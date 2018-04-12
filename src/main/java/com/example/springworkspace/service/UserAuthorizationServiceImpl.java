@@ -1,6 +1,6 @@
 package com.example.springworkspace.service;
 
-import com.example.springworkspace.model.Credentials;
+import com.example.springworkspace.command.Credentials;
 import com.example.springworkspace.model.User;
 import com.example.springworkspace.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -56,7 +56,7 @@ public class UserAuthorizationServiceImpl implements UserAuthorizationService {
     }
 
     private Optional<User> checkUserPassword(Optional<User> user, String password) {
-        if (user.isPresent())
+        if (user.isPresent() && password != null)
             return this.passwordEncoder.matches(password, user.get().getPassword()) ? Optional.of(user.get()) : Optional.empty();
         return Optional.empty();
     }

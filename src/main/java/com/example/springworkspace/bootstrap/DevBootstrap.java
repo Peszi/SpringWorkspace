@@ -1,16 +1,13 @@
 package com.example.springworkspace.bootstrap;
 
-import com.example.springworkspace.data.UserData;
-import com.example.springworkspace.model.Credentials;
+import com.example.springworkspace.command.Credentials;
 import com.example.springworkspace.model.User;
 import com.example.springworkspace.service.UserAuthorizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 

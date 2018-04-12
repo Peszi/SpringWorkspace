@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -31,12 +32,18 @@ public class JsonRequestFactory implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
-        return false;
+        System.out.println(response.getStatusCode().value());
+        return true;
     }
 
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
+        System.out.println(response.getStatusCode().value());
+    }
 
+    @Override
+    public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
+        System.out.println(response.getStatusCode().value());
     }
 
     public <T> HttpStatus makeRequestForResult(String path, HttpMethod method, Class<T> responseType, Param... params) {
@@ -67,7 +74,7 @@ public class JsonRequestFactory implements ResponseErrorHandler {
         try {
             return this.restTemplate.exchange(componentsBuilder.toUriString(), HttpMethod.POST, this.httpEntity, responseType);
         } catch (RestClientException e) {
-            System.err.println("Request failed!");
+            System.err.println("Request failed! " + e.getMessage());
         } catch (NullPointerException e){
             System.err.println("Build request factory first!");
         }

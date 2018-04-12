@@ -1,6 +1,6 @@
 package com.example.springworkspace.service;
 
-import com.example.springworkspace.model.Credentials;
+import com.example.springworkspace.command.Credentials;
 import com.example.springworkspace.model.User;
 
 import java.util.Optional;
