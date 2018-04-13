@@ -18,7 +18,7 @@ public class Depreciated {
 //    HttpEntity<?> entity = new HttpEntity<>(headers);
 //
 //        try {
-//        HttpEntity<UserData> response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity, UserData.class);
+//        HttpEntity<UserDTO> response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity, UserDTO.class);
 //        System.out.println("REQUEST id" + response.getBody().toString());
 //    } catch (RestClientException e) {
 //        System.err.println("REQUEST FAILED");
@@ -29,7 +29,7 @@ public class Depreciated {
 //    final String username = "John";
 //    final String password = "1234";
 //
-//    ResponseEntity<UserData> userDataResult;
+//    ResponseEntity<UserDTO> userDataResult;
 //
 //    ResponseEntity<String> registerResult = jsonRequestFactory.makeRequest("user/register", HttpMethod.POST, new Param("username", username), new Param("password", password));
 //        if (!registerResult.getStatusCode().isError()) {
@@ -39,7 +39,7 @@ public class Depreciated {
 //
 //    String api = "";
 //
-//    userDataResult = jsonRequestFactory.makeRequest("user/login", HttpMethod.POST, UserData.class, new Param("username", username), new Param("password", password));
+//    userDataResult = jsonRequestFactory.makeRequest("user/login", HttpMethod.POST, UserDTO.class, new Param("username", username), new Param("password", password));
 //        if (!userDataResult.getStatusCode().isError()) {
 //        System.out.println("Data " + userDataResult.getBody().toString());
 //        api = userDataResult.getBody().getApiKey();
@@ -47,7 +47,7 @@ public class Depreciated {
 //        System.out.println("Message " + userDataResult.getBody().getMessage());
 //    }
 //
-//    userDataResult = jsonRequestFactory.makeRequest("user/login", HttpMethod.POST, UserData.class, new Param("username", username), new Param("password", "asd"));
+//    userDataResult = jsonRequestFactory.makeRequest("user/login", HttpMethod.POST, UserDTO.class, new Param("username", username), new Param("password", "asd"));
 //        if (!userDataResult.getStatusCode().isError()) {
 //        System.out.println("Data " + userDataResult.getBody().toString());
 //    } else {

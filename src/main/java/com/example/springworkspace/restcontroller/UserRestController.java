@@ -1,11 +1,10 @@
-package com.example.springworkspace.controller;
+package com.example.springworkspace.restcontroller;
 
-import com.example.springworkspace.data.UserData;
+import com.example.springworkspace.data.FullUserDTO;
 import com.example.springworkspace.exception.BadRequestException;
 import com.example.springworkspace.exception.ConflictException;
 import com.example.springworkspace.exception.NotFoundException;
 import com.example.springworkspace.command.Credentials;
-import com.example.springworkspace.model.User;
 import com.example.springworkspace.service.AuditLoggerService;
 import com.example.springworkspace.service.MessageService;
 import com.example.springworkspace.service.UserAuthorizationService;
@@ -34,43 +33,44 @@ public class UserRestController {
         this.authorizationService = authorizationService;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<UserData> loginUser(@ModelAttribute Credentials credentials, HttpServletRequest request, Locale locale) { // @RequestParam(value="username") String username, @RequestParam(value="password") String password
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<FullUserDTO> loginUser(@ModelAttribute Credentials credentials, HttpServletRequest request, Locale locale) { // @RequestParam(value="username") String username, @RequestParam(value="password") String password
         this.loggerService.userLogging(request.getRemoteAddr(), credentials);
         if (!this.authorizationService.isUserExists(credentials.getUsername()))
             throw new NotFoundException(this.messageService.getMessage("user.not.exists", locale));
 
-        Optional<User> user = this.authorizationService.authorizeUser(credentials);
-        if (user.isPresent()) {
-            this.loggerService.userLogin(credentials);
-            return new ResponseEntity<>(new UserData(user.get().getId(), user.get().getApiKey()), HttpStatus.OK);
+        Optional<FullUserDTO> apiUserDTO = this.authorizationService.authorizeUser(credentials);
+        if (apiUserDTO.isPresent()) {
+            this.loggerService.userLogin(request.getRemoteAddr(), credentials);
+            return new ResponseEntity<>(apiUserDTO.get(), HttpStatus.OK);
         }
         throw new BadRequestException(this.messageService.getMessage("user.login.password.wrong", locale));
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> registerUser(@ModelAttribute Credentials credentials, HttpServletRequest request, Locale locale) {
         this.loggerService.userRegistering(request.getRemoteAddr(), credentials);
         if (this.authorizationService.isUserExists(credentials.getUsername()))
             throw new ConflictException(this.messageService.getMessage("user.already.exists", locale));
 
         if (this.authorizationService.registerUser(credentials)) {
-            this.loggerService.userRegistered(credentials);
+            this.loggerService.userRegistered(request.getRemoteAddr(), credentials);
             return new ResponseEntity<>(this.messageService.getMessage("user.register.success", locale), HttpStatus.CREATED);
         }
         throw new BadRequestException(this.messageService.getMessage("user.register.fail", locale));
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity<String> deregisterUser(@RequestParam(value="apiKey") String apiKey, HttpServletRequest request, Locale locale) {
         this.loggerService.userDeleting(request.getRemoteAddr(), apiKey);
         if (!this.authorizationService.isUserExistsByApiKey(apiKey))
             throw new NotFoundException(this.messageService.getMessage("user.not.exists", locale));
 
         if (this.authorizationService.deregisterUser(apiKey)) {
-            this.loggerService.userDeleted(apiKey);
+            this.loggerService.userDeleted(request.getRemoteAddr(), apiKey);
             return new ResponseEntity<>(this.messageService.getMessage("user.remove.success", locale), HttpStatus.OK);
         }
         throw new BadRequestException(this.messageService.getMessage("user.remove.fail", locale));
     }
+
 }

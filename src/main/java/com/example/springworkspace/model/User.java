@@ -3,12 +3,13 @@ package com.example.springworkspace.model;
 import com.example.springworkspace.configuration.BasicConfiguration;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Table(name = "users")
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
     @Id
@@ -24,9 +25,17 @@ public class User {
     @Column(length = BasicConfiguration.API_KEY_LENGTH)
     private String apiKey;
 
-    @ManyToOne(targetEntity = Room.class, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
-    @JsonManagedReference
+    private Boolean inGame;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date createdAt;
+
+    //@ManyToOne//(targetEntity = Room.class, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "room_id", referencedColumnName = "id")
+//    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_room")
     private Room room;
 
     public User() {}
@@ -34,18 +43,24 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.inGame = false;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public User setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+        return this;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -56,21 +71,30 @@ public class User {
         return password;
     }
 
-    public User setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-        return this;
-    }
-
     public String getApiKey() {
         return apiKey;
     }
 
+    public Boolean getInGame() {
+        return inGame;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public boolean hasRoom() {
+        return this.room != null ? true : false;
+    }
+
     public void setRoom(Room room) {
-        room.addUser(this);
+//        room.addUser(this);
         this.room = room;
+        this.inGame = true;
     }
 
     public void removeRoom() {
+        this.inGame = false;
         if (this.room != null)
             this.room.removeUser(this);
         this.room = null;
@@ -78,10 +102,6 @@ public class User {
 
     public Room getRoom() {
         return room;
-    }
-
-    public boolean hasRoom() {
-        return this.room != null ? true : false;
     }
 
     @Override
