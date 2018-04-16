@@ -13,5 +13,5 @@ public interface UserMapper {
 
     UserDTO userToUserDTO(User user);
 
-    FullUserDTO userToApiUserDTO(User user);
+    FullUserDTO userToFullUserDTO(User user);
 }

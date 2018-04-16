@@ -14,7 +14,6 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import java.util.Locale;
 
 @Configuration
-@EnableWebMvc
 public class BasicConfiguration {
 
     public static final int API_KEY_LENGTH = 64;
@@ -43,4 +42,7 @@ public class BasicConfiguration {
         resolver.setDefaultLocale(Locale.US);
         return resolver;
     }
+
+//    @Bean
+//    public Validator
 }

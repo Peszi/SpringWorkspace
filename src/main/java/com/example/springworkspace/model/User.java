@@ -33,9 +33,11 @@ public class User {
 
     //@ManyToOne//(targetEntity = Room.class, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "room_id", referencedColumnName = "id")
-//    @JsonManagedReference
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_room")
+    @JoinColumn(name = "ROOM_ID", referencedColumnName = "ROOM_ID")
+    //@JoinColumn(name = "fk_room")
+    @JsonManagedReference
     private Room room;
 
     public User() {}
@@ -88,15 +90,15 @@ public class User {
     }
 
     public void setRoom(Room room) {
-//        room.addUser(this);
         this.room = room;
+        room.addUser(this);
         this.inGame = true;
     }
 
     public void removeRoom() {
         this.inGame = false;
-        if (this.room != null)
-            this.room.removeUser(this);
+//        if (this.room != null)
+//            this.room.removeUser(this);
         this.room = null;
     }
 

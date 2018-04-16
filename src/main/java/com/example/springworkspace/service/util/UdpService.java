@@ -1,4 +1,4 @@
-package com.example.springworkspace.service;
+package com.example.springworkspace.service.util;
 
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;

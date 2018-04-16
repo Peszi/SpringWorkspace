@@ -1,15 +1,16 @@
 package com.example.springworkspace.command;
 
-import com.example.springworkspace.trash.net.Param;
-
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class Credentials {
 
-    @NotEmpty
+    @NotNull(message = "Param 'username' is needed!!!!")
+    @NotEmpty(message = "Username cannot be empty!!!!")
     private String username;
 
-    @NotEmpty
+    @NotNull(message = "Param 'password' is needed!!!!")
+    @NotEmpty(message = "Password cannot be empty!!!")
     private String password;
 
     public Credentials(String username, String password) {
@@ -25,11 +26,9 @@ public class Credentials {
         return password;
     }
 
-    public Param getUsernameParam() {
-        return new Param("username", this.username);
-    }
-
-    public Param getPasswordParam() {
-        return new Param("password", this.password);
+    public boolean isInit() {
+        if (this.username != null && this.password != null)
+            return true;
+        return false;
     }
 }

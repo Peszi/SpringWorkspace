@@ -13,11 +13,12 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ROOM_ID")
     private Long id;
 
     private Long hostId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", targetEntity = User.class, orphanRemoval = true)
     @JsonBackReference
     private Set<User> users = new HashSet<>();
 
@@ -35,7 +36,6 @@ public class Room {
 
     public void addUser(User user) {
         this.users.add(user);
-        user.setRoom(this);
     }
 
     public void removeUser(User user) {
@@ -52,6 +52,12 @@ public class Room {
 
     public Set<User> getUsers() {
         return users;
+    }
+
+    public Set<Long> getUsersIds() {
+        Set<Long> usersIds = new HashSet<>();
+        this.users.stream().forEach(user -> usersIds.add(user.getId()));
+        return usersIds;
     }
 
     public int getUsersCount() {

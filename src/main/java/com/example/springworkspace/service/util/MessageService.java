@@ -1,11 +1,12 @@
-package com.example.springworkspace.service;
+package com.example.springworkspace.service.util;
 
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
-@Service
+@Component
 public class MessageService {
 
     private static final String DEFAULT_MESSAGE = "Message not supported!";
@@ -16,7 +17,7 @@ public class MessageService {
         this.messageSource = messageSource;
     }
 
-    public String getMessage(String code, Locale locale) {
-        return this.messageSource.getMessage(code, null, MessageService.DEFAULT_MESSAGE, locale);
+    public String getMessage(String code) {
+        return this.messageSource.getMessage(code, null, MessageService.DEFAULT_MESSAGE, Locale.US);
     }
 }
