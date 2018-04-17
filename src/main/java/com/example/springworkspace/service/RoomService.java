@@ -9,8 +9,11 @@ import com.example.springworkspace.model.User;
 import java.util.Optional;
 
 public interface RoomService {
-    String createRoom(final String ip, String api);
-    String deleteRoom(final String ip, String api);
-    Iterable<FullRoomDTO> getAllRooms();
+    boolean createRoom(User user);
+    boolean deleteRoom(User user);
+    boolean startGame(User user);
+
     Room getRoomById(long roomId);
+    Room getRoomByHostId(long hostId);
+    Iterable<FullRoomDTO> getAllRooms();
 }

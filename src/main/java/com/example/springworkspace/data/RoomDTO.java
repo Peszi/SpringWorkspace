@@ -11,4 +11,6 @@ public class RoomDTO {
     private Long id;
     private Long hostId;
     private int usersCount;
+    private int usersReadyCount;
+    private boolean isStarted;
 }

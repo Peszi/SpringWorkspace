@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class FullUserDTO extends UserDTO {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";

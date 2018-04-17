@@ -18,12 +18,15 @@ public class Room {
 
     private Long hostId;
 
+    private Boolean isStarted;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room", targetEntity = User.class, orphanRemoval = true)
     @JsonBackReference
     private Set<User> users = new HashSet<>();
 
     public Room(Long hostId) {
         this.hostId = hostId;
+        this.isStarted = false;
     }
 
     public void setId(Long id) {
@@ -42,6 +45,10 @@ public class Room {
         this.users.remove(user);
     }
 
+    public void setStarted(Boolean started) {
+        isStarted = started;
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,14 +61,16 @@ public class Room {
         return users;
     }
 
-    public Set<Long> getUsersIds() {
-        Set<Long> usersIds = new HashSet<>();
-        this.users.stream().forEach(user -> usersIds.add(user.getId()));
-        return usersIds;
-    }
-
     public int getUsersCount() {
         return this.users.size();
+    }
+
+    public int getUsersReadyCount() {
+        return (int) this.users.stream().filter(User::getIsReady).count();
+    }
+
+    public Boolean getStarted() {
+        return isStarted;
     }
 
     @Override

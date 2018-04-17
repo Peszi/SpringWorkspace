@@ -1,6 +1,7 @@
 package com.example.springworkspace.service;
 
 import com.example.springworkspace.data.UserDTO;
+import com.example.springworkspace.data.UserListDTO;
 import com.example.springworkspace.model.Room;
 import com.example.springworkspace.model.User;
 
@@ -9,9 +10,11 @@ import java.util.Optional;
 public interface UserService {
     boolean createUser(User user);
     boolean deleteUser(String api);
-    Iterable<UserDTO> getAllUsers();
+    boolean joinRoom(User user, Room room);
+    boolean leaveRoom(User user);
+    boolean setReady(User user);
     User getUserByName(String username);
     User getUserByApi(String api);
-    boolean joinRoom(String api, Room room);
-    boolean leaveRoom(String api);
+    User getUserById(long userId);
+    UserListDTO getAllUsers();
 }

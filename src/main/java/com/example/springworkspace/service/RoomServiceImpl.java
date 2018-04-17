@@ -5,6 +5,7 @@ import com.example.springworkspace.data.RoomDTO;
 import com.example.springworkspace.exception.NotFoundException;
 import com.example.springworkspace.mapper.RoomMapper;
 import com.example.springworkspace.model.Room;
+import com.example.springworkspace.model.User;
 import com.example.springworkspace.repository.RoomRepository;
 import com.example.springworkspace.service.util.AuditLoggerService;
 import com.example.springworkspace.service.util.MessageService;
@@ -20,41 +21,57 @@ public class RoomServiceImpl implements RoomService {
     private MessageService messageService;
 
     private RoomMapper roomMapper;
-
-    private UserService userService;
     private RoomRepository roomRepository;
 
-    public RoomServiceImpl(AuditLoggerService loggerService, MessageService messageService, RoomMapper roomMapper, UserService userService, RoomRepository roomRepository) {
+    public RoomServiceImpl(AuditLoggerService loggerService, MessageService messageService, RoomMapper roomMapper, RoomRepository roomRepository) {
         this.loggerService = loggerService;
         this.messageService = messageService;
         this.roomMapper = roomMapper;
-        this.userService = userService;
         this.roomRepository = roomRepository;
     }
 
     @Override
-    public String createRoom(final String ip, String api) {
-        final long hostId = this.userService.getUserByApi(api).getId();
-        this.validateRoomExists(hostId);
-        Room room = new Room(hostId);
+    public boolean createRoom(User user) {
+        this.validateRoomExists(user.getId());
+        Room room = new Room(user.getId());
         this.roomRepository.save(room);
-        if (this.roomRepository.findRoomByHostId(hostId).isPresent()) {
-            this.loggerService.roomCreated(ip, room.getId());
-            return this.messageService.getMessage("room.create.success");
+        if (this.roomRepository.findRoomByHostId(user.getId()).isPresent()) {
+            this.loggerService.roomCreated("", room.getId());
+            return true;
         }
-        return this.messageService.getMessage("room.create.fail");
+        return false;
     }
 
     @Override
-    public String deleteRoom(final String ip, String api) {
-        final long hostId = this.userService.getUserByApi(api).getId();
-        Room room = this.validateAndGetRoomWithHostId(hostId);
+    public boolean deleteRoom(User user) {
+        Room room = this.validateAndGetRoomWithHostId(user.getId());
         this.roomRepository.delete(room);
-        if (!this.roomRepository.findRoomByHostId(hostId).isPresent()) {
-            this.loggerService.roomDeleted(ip, room.getId());
-            return this.messageService.getMessage("room.delete.success");
+        if (!this.roomRepository.findRoomByHostId(user.getId()).isPresent()) {
+            this.loggerService.roomDeleted("", room.getId());
+            return true;
         }
-        return this.messageService.getMessage("room.delete.fail");
+        return false;
+    }
+
+    @Override
+    public boolean startGame(User user) {
+        Room room = this.validateAndGetRoomWithHostId(user.getId());
+        if (!room.getStarted()) {
+            room.setStarted(true);
+            this.roomRepository.save(room);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Room getRoomById(long roomId) {
+        return this.validateAndGetRoom(roomId);
+    }
+
+    @Override
+    public Room getRoomByHostId(long hostId) {
+        return this.validateAndGetRoomWithHostId(hostId);
     }
 
     @Override
@@ -65,23 +82,6 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Room getRoomById(long roomId) {
-        return this.validateAndGetRoom(roomId);
-    }
-
-    //    @Override
-//    public Optional<Room> getRawRoomById(long roomId) {
-//        return this.roomRepository.findById(roomId);
-//    }
-//
-//    @Override
-//    public Optional<RoomDTO> getRoomById(long roomId) {
-//        Optional<Room> room = this.roomRepository.findById(roomId);
-//        if (room.isPresent())
-//            return Optional.of(this.roomMapper.roomToRoomDTO(room.get()));
-//        return Optional.empty();
-//    }
     // Validate
 
     private Room validateAndGetRoom(long roomId) {

@@ -36,6 +36,12 @@ public class UserRoomRestController {
         return this.userRoomService.leaveRoom(api);
     }
 
+    @PostMapping("/ready")
+    @ResponseStatus(HttpStatus.OK)
+    public String setReady(@RequestParam String api) {
+        return this.userRoomService.setReady(api);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public FullRoomDTO getAllRooms(@RequestParam String api) {

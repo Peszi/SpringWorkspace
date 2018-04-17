@@ -1,6 +1,7 @@
 package com.example.springworkspace.bootstrap;
 
 import com.example.springworkspace.command.Credentials;
+import com.example.springworkspace.service.RoomManageService;
 import com.example.springworkspace.service.RoomService;
 import com.example.springworkspace.service.UserAuthService;
 import com.example.springworkspace.service.UserRoomService;
@@ -15,15 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     public static final Credentials CREDENTIALS = new Credentials("Admin", "1234");
+    public static final Credentials CREDENTIALS2 = new Credentials("John", "1234");
+
     public static final String IP = "local";
 
     private RoomService roomService;
     private UserRoomService userRoomService;
+    private RoomManageService roomManageService;
     private UserAuthService authService;
 
-    public DevBootstrap(RoomService roomService, UserRoomService userRoomService, UserAuthService authService) {
+    public DevBootstrap(RoomService roomService, UserRoomService userRoomService, RoomManageService roomManageService, UserAuthService authService) {
         this.roomService = roomService;
         this.userRoomService = userRoomService;
+        this.roomManageService = roomManageService;
         this.authService = authService;
     }
 
@@ -38,10 +43,14 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         this.authService.registerUser(IP, CREDENTIALS);
         final String api = this.authService.authorizeUser(IP, CREDENTIALS).getApiKey();
         log.info("API " + api);
-        this.roomService.createRoom(IP, api);
+        this.roomManageService.createRoom(api);
 
         this.userRoomService.joinRoom(api, 1L);
         this.roomService.getAllRooms();
+
+        this.authService.registerUser(IP, CREDENTIALS2);
+        final String api2 = this.authService.authorizeUser(IP, CREDENTIALS2).getApiKey();
+        log.info("API2 " + api2);
 
 //        this.roomService.deleteRoom(IP, api);
 

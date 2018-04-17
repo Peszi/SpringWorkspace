@@ -1,6 +1,6 @@
 package com.example.springworkspace.service;
 
-import com.example.springworkspace.data.UserDTO;
+import com.example.springworkspace.data.UserListDTO;
 import com.example.springworkspace.exception.ConflictException;
 import com.example.springworkspace.exception.NotFoundException;
 import com.example.springworkspace.mapper.UserMapper;
@@ -9,6 +9,7 @@ import com.example.springworkspace.model.User;
 import com.example.springworkspace.repository.UserRepository;
 import com.example.springworkspace.service.util.MessageService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean createUser(User user) {
         this.validateUserAlreadyExists(user.getUsername());
         this.userRepository.save(user);
@@ -36,10 +38,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean deleteUser(String api) {
         this.userRepository.delete(this.validateAndGetUserWithKey(api));
         if (!this.userRepository.findByApiKey(api).isPresent())
             return true;
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public boolean joinRoom(User user, Room room) {
+        if (user != null && !user.hasRoom()) {
+            user.setRoom(room);
+            this.userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public boolean leaveRoom(User user) {
+        if (user != null && user.hasRoom()) {
+            user.removeRoom();
+            this.userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean setReady(User user) {
+        if (user != null && user.hasRoom() && !user.getIsReady()) {
+            user.setReady(true);
+            this.userRepository.save(user);
+            return true;
+        }
         return false;
     }
 
@@ -54,36 +89,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Iterable<UserDTO> getAllUsers() {
-        return this.userRepository.findAll()
+    public User getUserById(long userId) {
+        return this.validateAndGetUser(userId);
+    }
+
+    @Override
+    public UserListDTO getAllUsers() {
+        return new UserListDTO(this.userRepository.findAll()
                 .stream()
                 .map(this.userMapper::userToUserDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean joinRoom(String api, Room room) {
-        User user = this.validateAndGetUserWithKey(api);
-        if (!user.hasRoom()) {
-            user.setRoom(room);
-            this.userRepository.flush();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean leaveRoom(String api) {
-        User user = this.validateAndGetUserWithKey(api);
-        if (user.hasRoom()) {
-            user.removeRoom();
-            this.userRepository.flush();
-            return true;
-        }
-        return false;
+                .collect(Collectors.toList()));
     }
 
     // Validators
+
+    private User validateAndGetUser(long userId) {
+        return this.userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(this.messageService.getMessage("user.not.found")));
+    }
 
     private User validateAndGetUser(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(

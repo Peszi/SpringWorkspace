@@ -12,6 +12,4 @@ import java.util.Date;
 @EqualsAndHashCode
 public class UserDTO {
     private long id;
-    private Boolean inGame;
-
 }

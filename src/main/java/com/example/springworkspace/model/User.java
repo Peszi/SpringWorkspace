@@ -1,7 +1,7 @@
 package com.example.springworkspace.model;
 
 import com.example.springworkspace.configuration.BasicConfiguration;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -25,18 +25,15 @@ public class User {
     @Column(length = BasicConfiguration.API_KEY_LENGTH)
     private String apiKey;
 
-    private Boolean inGame;
+    @JsonIgnore
+    private Boolean isReady;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Date createdAt;
 
-    //@ManyToOne//(targetEntity = Room.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "room_id", referencedColumnName = "id")
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ROOM_ID", referencedColumnName = "ROOM_ID")
-    //@JoinColumn(name = "fk_room")
     @JsonManagedReference
     private Room room;
 
@@ -45,7 +42,7 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.inGame = false;
+        this.isReady = false;
     }
 
     public void setId(Long id) {
@@ -54,6 +51,10 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setReady(Boolean ready) {
+        isReady = ready;
     }
 
     public User setApiKey(String apiKey) {
@@ -77,8 +78,8 @@ public class User {
         return apiKey;
     }
 
-    public Boolean getInGame() {
-        return inGame;
+    public Boolean getIsReady() {
+        return isReady;
     }
 
     public Date getCreatedAt() {
@@ -91,12 +92,12 @@ public class User {
 
     public void setRoom(Room room) {
         this.room = room;
-        room.addUser(this);
-        this.inGame = true;
+//        room.addUser(this);
+        this.isReady = false;
     }
 
     public void removeRoom() {
-        this.inGame = false;
+        this.isReady = false;
 //        if (this.room != null)
 //            this.room.removeUser(this);
         this.room = null;
@@ -117,16 +118,5 @@ public class User {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", apiKey='" + apiKey + '\'' +
-                ", room=" + room +
-                '}';
     }
 }
