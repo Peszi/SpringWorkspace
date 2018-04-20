@@ -30,7 +30,7 @@ public class UserRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser(@Valid Credentials credentials, BindingResult bindingResult, HttpServletRequest request) {
+    public String registerUser(@Valid @ModelAttribute Credentials credentials, BindingResult bindingResult, HttpServletRequest request) {
         if (!bindingResult.hasErrors())
             this.authorizationService.registerUser(this.getIpAddress(request), credentials);
         throw this.handleIncorrectCredentials();
@@ -44,7 +44,7 @@ public class UserRestController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public FullUserDTO loginUser(@Valid Credentials credentials, BindingResult bindingResult, HttpServletRequest request) { // @RequestParam String username, @RequestParam String password
+    public FullUserDTO loginUser(@Valid @ModelAttribute Credentials credentials, BindingResult bindingResult, HttpServletRequest request) { // @RequestParam String username, @RequestParam String password
         if (!bindingResult.hasErrors())
             return this.authorizationService.authorizeUser(this.getIpAddress(request), credentials);
         throw this.handleIncorrectCredentials();
