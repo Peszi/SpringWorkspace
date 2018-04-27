@@ -1,7 +1,6 @@
 package com.example.springworkspace.service;
 
 import com.example.springworkspace.data.FullRoomDTO;
-import com.example.springworkspace.data.RoomDTO;
 import com.example.springworkspace.exception.NotFoundException;
 import com.example.springworkspace.mapper.RoomMapper;
 import com.example.springworkspace.model.Room;
@@ -11,7 +10,6 @@ import com.example.springworkspace.service.util.AuditLoggerService;
 import com.example.springworkspace.service.util.MessageService;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

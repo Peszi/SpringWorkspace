@@ -2,7 +2,6 @@ package com.example.springworkspace.service.util;
 
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 

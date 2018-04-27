@@ -16,6 +16,8 @@ public class Room {
     @Column(name = "ROOM_ID")
     private Long id;
 
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = User.class)
+    @JoinColumn(name = "hostId", referencedColumnName = "id")
     private Long hostId;
 
     private Boolean isStarted;

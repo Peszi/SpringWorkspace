@@ -1,18 +1,9 @@
 package com.example.springworkspace.restcontroller;
 
 import com.example.springworkspace.data.FullRoomDTO;
-import com.example.springworkspace.data.RoomDTO;
-import com.example.springworkspace.data.RoomListDTO;
-import com.example.springworkspace.exception.NotFoundException;
-import com.example.springworkspace.model.Room;
 import com.example.springworkspace.service.UserRoomService;
-import com.example.springworkspace.service.util.MessageService;
-import com.example.springworkspace.service.RoomService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user/room")

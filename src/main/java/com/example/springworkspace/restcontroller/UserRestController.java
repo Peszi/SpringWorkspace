@@ -1,9 +1,8 @@
 package com.example.springworkspace.restcontroller;
 
-import com.example.springworkspace.data.FullUserDTO;
 import com.example.springworkspace.command.Credentials;
+import com.example.springworkspace.data.FullUserDTO;
 import com.example.springworkspace.exception.BadRequestException;
-import com.example.springworkspace.service.util.AuditLoggerService;
 import com.example.springworkspace.service.UserAuthService;
 import com.example.springworkspace.service.util.MessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 
 @Slf4j
 @RestController

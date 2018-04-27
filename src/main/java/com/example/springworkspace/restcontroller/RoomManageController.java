@@ -1,7 +1,6 @@
 package com.example.springworkspace.restcontroller;
 
 import com.example.springworkspace.service.RoomManageService;
-import com.example.springworkspace.service.UserRoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

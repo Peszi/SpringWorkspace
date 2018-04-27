@@ -1,21 +1,13 @@
 package com.example.springworkspace.service;
 
 import com.example.springworkspace.data.FullRoomDTO;
-import com.example.springworkspace.data.RoomDTO;
-import com.example.springworkspace.data.UserDTO;
 import com.example.springworkspace.exception.BadRequestException;
 import com.example.springworkspace.exception.NotFoundException;
 import com.example.springworkspace.mapper.RoomMapper;
-import com.example.springworkspace.mapper.UserMapper;
 import com.example.springworkspace.model.Room;
-import com.example.springworkspace.model.User;
 import com.example.springworkspace.service.util.MessageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserRoomServiceImpl implements UserRoomService {

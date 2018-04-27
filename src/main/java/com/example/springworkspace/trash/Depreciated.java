@@ -1,8 +1,5 @@
 package com.example.springworkspace.trash;
 
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-
 public class Depreciated {
 //    String url = "http://localhost:8080/user/login";
 //    RestTemplate restTemplate = new RestTemplate();

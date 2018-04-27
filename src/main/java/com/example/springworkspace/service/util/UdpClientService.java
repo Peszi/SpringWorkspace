@@ -1,12 +1,5 @@
 package com.example.springworkspace.service.util;
 
-import org.springframework.scheduling.annotation.Scheduled;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.io.IOException;
-import java.net.*;
-
 public class UdpClientService {
 
 //    private byte[] buf = new byte[256];
